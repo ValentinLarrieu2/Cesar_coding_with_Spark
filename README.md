@@ -179,7 +179,7 @@ Then we get our file back and import it to spark
 
 - A function &quot;readHadoopFileDf&quot; generates a Dataframe with the output file of the M/R
 
-<img src="./Files/Images/readHadoop.png" alt="test" height="250" width="350"> 
+<img src="./Files/Images/readHadoop.png" alt="test" height="200" width="500"> 
 
 ### Adding a column to the generated dataframe
 
@@ -192,7 +192,7 @@ Then a column is added to the dataframe in order to allow a join witthe language
 We then need to join that result to the most frequent letter by language to be able to guess the ciphering key
 
 - The function &quot;joinLangAndOutputDF&quot; returns a dataframe of one line and 4 column, one being the most used letter in this language and another one being the letter the most used in our text
-<img src="./Files/Images/joinOut.png" alt="test" height="200" width="600"> 
+<img src="./Files/Images/joinOut.png" alt="test" height="200" width="450"> 
 
 When we visualize their content:
 <img src="./Files/Images/lettersCode.png" alt="test" height="400" width="400"> 
@@ -248,7 +248,7 @@ We test our functions now to decipher a column:
 
 - Result:
 
-<img src="./Files/Images/resGuess.png" alt="test" height="200" width="400"> 
+<img src="./Files/Images/resGuess.png" alt="test" height="200" width="300"> 
 
 ### Comparison finding key with join and guessing it
 
@@ -266,7 +266,7 @@ So to conclude that new implementation:
 - Guessing the language the way we implemented it avoid the problem of the join which multiplied the computing time
 - It also allowed us not to specify the language but still get the correct answer
 
-# Files provided with the report
+# Files provided
 
 - txt: The text file on which we tested our code
 - txt: The modified text file where only &quot;e&quot; letters are &quot;h&quot;
