@@ -1,0 +1,81 @@
+#Example 2: guessing language and key
+
+#returns the number of char separing the reference from the other char (ex : getCharDiff("a","c") = -2)
+def getCharDiff(charMessage,charReference): 
+  return ord(charMessage)-ord(charReference)
+
+def readHadoopFileDf(path):
+  rddFreq=sc.textFile(path).map(lambda line: line.split('\t')) #we read the haddop result
+  rddMap = rddFreq.map(lambda scmr:(scmr[0],int(scmr[1])))
+  #We convert it to dataframe
+  dfFreq = rddMap.toDF(["letter","countLetter"])#we create the dataframe
+  return dfFreq
+
+dfFreq=readHadoopFileDf("/FileStore/tables/4gv5en6u1509544751327/part_r_00000-b65ee")#We read the file returned by hadoop and create the corresponding dataframe
+dfFreqEisH=readHadoopFileDf("/FileStore/tables/part_r_00003-dc956")
+dfFreqCiphered3=readHadoopFileDf("/FileStore/tables/part_r_00000_CharFreqFullyCiphered3-29f14")
+
+#Function wich returns the language and the cyphering key of the dataframe (based on the 4 most frequent letters here). If no language is detected precisly, it returns "NoLanguage" as the language and 0 as the cyphering key
+def guessLanguageAndCypheringKey(dataframe):
+  resultLangKey = [("NoLanguage"), ('0')]
+
+  dataframe=dataframe.sort(dataframe.countLetter, ascending=False)#We sort the letters by descending order
+  #display(dfFreqCiphered3)
+
+  #We get the 4 most used letters. Here we compute the 10 first one as we have them all in our list but we will only use 4 of them (we can scale it up to 10 then)
+  charLetter11=dataframe.select('letter').collect()[0].letter #We get the letter the most present in our text
+  charLetter12=dataframe.select('letter').collect()[1].letter 
+  charLetter13=dataframe.select('letter').collect()[2].letter 
+  charLetter14=dataframe.select('letter').collect()[3].letter 
+  charLetter15=dataframe.select('letter').collect()[4].letter 
+  charLetter16=dataframe.select('letter').collect()[5].letter 
+  charLetter17=dataframe.select('letter').collect()[6].letter 
+  charLetter18=dataframe.select('letter').collect()[7].letter 
+  charLetter19=dataframe.select('letter').collect()[8].letter 
+  charLetter110=dataframe.select('letter').collect()[9].letter 
+
+  #We create our object storing the most used letters by order in each of the 8 languages we selected (can easily be extended)
+  set = [('english','e','t','a','o','i','n','s','h','r','d'),('french','e','s','a','i','t','n','r','u','o','l'),('spanish','e','a','o','s','r','n','i','d','l','t'),('dutch','e','n','a','t','i','r','o','d','s','l'),('german','e','n','s','r','i','a','t','d','h','u'),('danish','e','r','n','t','a','i','d','s','l','o'),('portuguese','a','e','o','s','r','i','d','m','n','t'),('italian','e','a','i','o','n','l','r','t','s','c')]
+  rdd = sc.parallelize(set)
+
+  """
+  #if we want to compute the full distances regarding the 10 most used letter in our languages
+  rddLang = rdd.map(lambda x: (x[0], getCharDiff(charLetter11,x[1]), getCharDiff(charLetter12,x[2]), getCharDiff(charLetter13,x[3]), getCharDiff(charLetter14,x[4]), getCharDiff(charLetter15,x[5]), getCharDiff(charLetter16,x[6]),getCharDiff(charLetter17,x[7]),getCharDiff(charLetter18,x[8]),getCharDiff(charLetter19,x[9]),getCharDiff(charLetter110,x[10])))
+  dfTableLang = rddLang.toDF(["Language","Letter1","Letter2","Letter3","Letter4","Letter5","Letter6","Letter7","Letter8","Letter9","Letter10"])
+  #display(dfTableLang)
+
+  #if we want to compute the distances regarding only the 4 most used letters
+  rddLang4=rdd.map(lambda x: (x[0], getCharDiff(charLetter11,x[1]), getCharDiff(charLetter12,x[2]), getCharDiff(charLetter13,x[3]), getCharDiff(charLetter14,x[4])))
+  dfTableLang4=rddLang4.toDF(["Language","Letter1","Letter2","Letter3","Letter4"])
+  #display(dfTableLang4)
+  """
+
+  dfLanguageKey = rdd.map(lambda x: (x[0], (getCharDiff(charLetter11,x[1]) if (getCharDiff(charLetter11,x[1]) == getCharDiff(charLetter12,x[2]) and getCharDiff(charLetter12,x[2]) == getCharDiff(charLetter13,x[3]) and getCharDiff(charLetter13,x[3]) == getCharDiff(charLetter14,x[4])) else (-1000)))).toDF(["language","cypherKey"])#if the distance between the most frequent letter by order by language is the same, we put a 1 it is that language. (if it is the same language the distance should be the same on each letter)
+
+  #the function getCharDiff can only return between -25 and 25 so puting -1000 as the default value ensure us that our element being not the good language won't be at first position when we sort them, that is to say the good
+  #language is in first position
+  dfLanguageKey=dfLanguageKey.sort(dfLanguageKey.cypherKey, ascending=False)#we sort our dataFrame
+  #display(dfLanguageKey)
+
+  languageGuessed=dfLanguageKey.select('language').collect()[0].language #we extract the language detected
+  cipheringKeyGuessed=dfLanguageKey.select('cypherKey').collect()[0].cypherKey #we extract the cypheringKey
+
+  #By default, if no language is detected precisly, the functions return a cyphering key of 0 and a language of "NoLanguage"
+  if (cipheringKeyGuessed!= -1000):
+    resultLangKey[0]=languageGuessed
+    resultLangKey[1]=cipheringKeyGuessed
+    
+  return (resultLangKey)
+
+langCypherKeyListPlainText=guessLanguageAndCypheringKey(dfFreq)
+langCypherKeyListEisH=guessLanguageAndCypheringKey(dfFreqEisH)
+langCypherKeyListCipheredText3=guessLanguageAndCypheringKey(dfFreqCiphered3) #will contain the result of the guess: the language AND the cypheringKey
+
+print("LETTER DIFFERENCE FOR ORIGINAL TEXT")
+print(langCypherKeyListPlainText[1])
+print("LETTER DIFFERENCE FOR MODIFIED TEXT (E is H) => should return 0 since only one letter has been modified")
+print(langCypherKeyListEisH[1])
+print("LETTER DIFFERENCE FOR FULLY MODIFIED TEXT")
+print(langCypherKeyListCipheredText3[1])
+print("LANGUAGE DETECTED")
+print(langCypherKeyListCipheredText3[0])
