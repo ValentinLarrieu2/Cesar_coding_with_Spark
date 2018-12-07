@@ -48,7 +48,7 @@ Example: **TEST** becomes with a ciphering key of + **2** : **VGUV** then cipher
 We first implemented it on python
 
 - A function &quot;cypherletter&quot; returns the letter ciphered by the precised offset
-<img src="./Files/Images/cypherLetter.png" alt="test" height="900" width="500"> 
+<img src="./Files/Images/cypherLetter.png" alt="test" height="500" width="350"> 
 
 -
   - So as we can see we test if our letter is an uppercase or lowercase (else it is not a letter so we do not cipher it)
@@ -95,7 +95,7 @@ To test our Map/Reduce we took a book as a text file (A Tale of Two Cities, by C
 <img src="./Files/Images/cypherLetter.png" alt="test" height="500" width="900"> 
 
 - We executed it on our book file, with a ciphering key of 3
-<img src="./Files/Images/execCyph.png" alt="test" height="100" width="500"> 
+<img src="./Files/Images/execCyph.png" alt="test" height="50" width="400"> 
 
 
 <img src="./Files/Images/resExecCyph.png" alt="test" height="80" width="400"> 
@@ -109,7 +109,7 @@ To test our Map/Reduce we took a book as a text file (A Tale of Two Cities, by C
 - As we can see the text has been shifted 3 times on the &quot;right&quot;
 
 - We then now Execute again the job taking that file as an entry and a ciphering key of -3
-<img src="./Files/Images/execCyph2.png" alt="test" height="80" width="200"> 
+<img src="./Files/Images/execCyph2.png" alt="test" height="50" width="400"> 
 <img src="./Files/Images/resExecCyph2.png" alt="test" height="100" width="900"> 
 
 
@@ -132,7 +132,7 @@ So what we need to do is first to construct a table associating the language wit
 - The function &quot;generateMostFreqLetterByCountryDF&quot; returns a Dataframe with the language and his corresponding most frequent letter
 
 <img src="./Files/Images/generateFreq.png" alt="test" height="150" width="700"> 
-<img src="./Files/Images/dfFreq.png" alt="test" height="300" width="700"> 
+<img src="./Files/Images/dfFreq.png" alt="test" height="200" width="500"> 
 
 We then need to do our heuristic analysis on the text.
 
@@ -163,8 +163,8 @@ So we imported our jar of char counter on the cluster, and executed it on the 2
 
 We then compare the results:
 
-<img src="./Files/Images/letters1.png" alt="test" height="500" width="200"> 
-<img src="./Files/Images/letters2.png" alt="test" height="500" width="200"> 
+<img src="./Files/Images/letters1.png" alt="test" height="500" width="800"> 
+<img src="./Files/Images/letters2.png" alt="test" height="500" width="800"> 
 <img src="./Files/Images/letters3.png" alt="test" height="500" width="200"> 
 
 
@@ -179,7 +179,7 @@ Then we get our file back and import it to spark
 
 - A function &quot;readHadoopFileDf&quot; generates a Dataframe with the output file of the M/R
 
-<img src="./Files/Images/readHadoop.png" alt="test" height="200" width="400"> 
+<img src="./Files/Images/readHadoop.png" alt="test" height="300" width="500"> 
 
 ### Adding a column to the generated dataframe
 
@@ -192,7 +192,7 @@ Then a column is added to the dataframe in order to allow a join witthe language
 We then need to join that result to the most frequent letter by language to be able to guess the ciphering key
 
 - The function &quot;joinLangAndOutputDF&quot; returns a dataframe of one line and 4 column, one being the most used letter in this language and another one being the letter the most used in our text
-<img src="./Files/Images/joinOut.png" alt="test" height="300" width="600"> 
+<img src="./Files/Images/joinOut.png" alt="test" height="200" width="600"> 
 
 When we visualize their content:
 <img src="./Files/Images/lettersCode.png" alt="test" height="400" width="400"> 
@@ -207,7 +207,7 @@ We need to compute the difference between the 2 letters
 
 - The function &quot;getCharDiff&quot; gives us the distance (as a value) between the reference (the most used letter in the language) and the given letter (the letter the most used in our text)
 
-<img src="./Files/Images/getCharDiff.png" alt="test" height="100" width="300"> 
+<img src="./Files/Images/getCharDiff.png" alt="test" height="100" width="500"> 
 
 We use it and see if the distance calculated is right:
 
@@ -235,13 +235,13 @@ We test our functions now to decipher a column:
 ## Implementation
 
 <img src="./Files/Images/implem.png" alt="test" height="800" width="800"> 
-<img src="./Files/Images/cypherGuess.png" alt="test" height="150" width="400"> 
+<img src="./Files/Images/cypherGuess.png" alt="test" height="150" width="700"> 
 
 - As we can see, to guess the language we class the result from our Hadoop job to have the letters by order of frequency.
 - Then we extract them in variables (10 here but only 4 used so we can improve it)
 - We compute the &quot;distance&quot; between each of those letters and the corresponding most used letter in each of the 8 languages proposed there (example here for the text ciphered by a key of 3)
 
-<img src="./Files/Images/langRep.png" alt="test" height="300" width="800"> 
+<img src="./Files/Images/langRep.png" alt="test" height="300" width="1000"> 
 
 
 - If for one language each of the distances are the same, we found our ciphering key and language then we return it (else we return a ciphering key of 0 and a language of &quot;NoLanguage&quot;)
