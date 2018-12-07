@@ -48,7 +48,7 @@ Example: **TEST** becomes with a ciphering key of + **2** : **VGUV** then cipher
 We first implemented it on python
 
 - A function &quot;cypherletter&quot; returns the letter ciphered by the precised offset
-<img src="./Files/Images/cypherLetter.png" alt="test" height="500" width="350"> 
+<img src="./Files/Images/cypherLetter.png" alt="test" height="400" width="550"> 
 
 -
   - So as we can see we test if our letter is an uppercase or lowercase (else it is not a letter so we do not cipher it)
@@ -95,7 +95,7 @@ To test our Map/Reduce we took a book as a text file (A Tale of Two Cities, by C
 <img src="./Files/Images/cypherLetter.png" alt="test" height="500" width="900"> 
 
 - We executed it on our book file, with a ciphering key of 3
-<img src="./Files/Images/execCyph.png" alt="test" height="50" width="400"> 
+<img src="./Files/Images/execCyph.png" alt="test" height="20" width="400"> 
 
 
 <img src="./Files/Images/resExecCyph.png" alt="test" height="80" width="400"> 
@@ -109,7 +109,7 @@ To test our Map/Reduce we took a book as a text file (A Tale of Two Cities, by C
 - As we can see the text has been shifted 3 times on the &quot;right&quot;
 
 - We then now Execute again the job taking that file as an entry and a ciphering key of -3
-<img src="./Files/Images/execCyph2.png" alt="test" height="50" width="400"> 
+<img src="./Files/Images/execCyph2.png" alt="test" height="20" width="400"> 
 <img src="./Files/Images/resExecCyph2.png" alt="test" height="100" width="900"> 
 
 
@@ -132,7 +132,7 @@ So what we need to do is first to construct a table associating the language wit
 - The function &quot;generateMostFreqLetterByCountryDF&quot; returns a Dataframe with the language and his corresponding most frequent letter
 
 <img src="./Files/Images/generateFreq.png" alt="test" height="150" width="700"> 
-<img src="./Files/Images/dfFreq.png" alt="test" height="200" width="500"> 
+<img src="./Files/Images/dfFreq.png" alt="test" height="200" width="350"> 
 
 We then need to do our heuristic analysis on the text.
 
@@ -157,7 +157,7 @@ So we imported our jar of char counter on the cluster, and executed it on the 2
 <img src="./Files/Images/exec3.png" alt="test" height="50" width="600"> 
 <img src="./Files/Images/exec32.png" alt="test" height="50" width="600"> 
 <img src="./Files/Images/exec33.png" alt="test" height="50" width="600"> 
-<img src="./Files/Images/exec34.png" alt="test" height="50" width="600"> 
+<img src="./Files/Images/exec34.png" alt="test" height="80" width="600"> 
 
 
 
@@ -179,7 +179,7 @@ Then we get our file back and import it to spark
 
 - A function &quot;readHadoopFileDf&quot; generates a Dataframe with the output file of the M/R
 
-<img src="./Files/Images/readHadoop.png" alt="test" height="300" width="500"> 
+<img src="./Files/Images/readHadoop.png" alt="test" height="250" width="350"> 
 
 ### Adding a column to the generated dataframe
 
